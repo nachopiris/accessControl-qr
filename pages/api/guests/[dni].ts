@@ -23,7 +23,6 @@ const updateGuest = (dni: string | string[]) => {
   const guestIndex = guests.findIndex(
     (guest: Guest) => guest.guestDNI === Number(dni),
   )
-  console.log(guestIndex)
   guests[guestIndex].gotIn = true
   writeData(guests)
   return guests[guestIndex]
@@ -41,13 +40,13 @@ export default function index(req: NextApiRequest, res: NextApiResponse) {
     }
 
     if (dni.length !== 8 || isNaN(Number(dni))) {
-      throw new Error('DNI invalido')
+      throw new Error('DNI inválido')
     }
 
     const guest = getGuest(dni)
 
     if (!guest) {
-      throw new Error('No esta en lista')
+      throw new Error('No está en lista')
     }
 
     if (method === 'GET') {

@@ -1,4 +1,5 @@
 import dynamic from 'next/dynamic'
+import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
 
@@ -13,14 +14,16 @@ export default function Scanner() {
   const [reading, setReading] = useState(true)
 
   useEffect(() => {
-    if (dni) {
-      router.replace(`/guest/${dni}`)
+    if (dni && dni.length === 8 && !isNaN(Number(dni))) {
+      setReading(false)
+      router.replace(`/guests/${dni}`)
+    } else if (dni) {
+      alert("QR inválido!")
     }
   }, [dni, router])
 
   const handleScan = (data: string | null) => {
     if (data) {
-      setReading(false)
       setDni(data)
     }
   }
@@ -31,17 +34,24 @@ export default function Scanner() {
 
   return (
     <div
-      className={
-        'h-screen flex items-center justify-center ' + (reading && 'bg-black')
-      }
+      className={`h-screen flex flex-col items-center ${
+        reading ? 'bg-slate-800' : 'justify-center'
+      }`}
     >
       {reading ? (
-        <QrReader
-          delay={reading && 500}
-          onError={handleError}
-          onScan={handleScan}
-          style={{ width: '100%' }}
-        />
+        <>
+          <QrReader
+            delay={reading && 500}
+            onError={handleError}
+            onScan={handleScan}
+            style={{ width: '100%' }}
+          />
+          <Link href="/guests">
+            <button className="mt-8 p-4 bg-blue-600 hover:bg-blue-700 focus:ring-blue-500 focus:ring-offset-blue-200 text-white transition ease-in duration-200 text-center text-base font-semibold shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2 rounded-full">
+              Ver lista
+            </button>
+          </Link>
+        </>
       ) : (
         <>
           <svg
