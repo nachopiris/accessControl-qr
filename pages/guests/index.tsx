@@ -3,7 +3,7 @@ import Link from 'next/link'
 import { SearchIcon } from '@heroicons/react/solid'
 import { Guest } from 'interfaces/Guest'
 
-export default function index() {
+export default function Guests() {
   const [guests, setGuests] = useState([])
   const [searchInput, setSearchInput] = useState('')
   const [loading, setLoading] = useState(true)
