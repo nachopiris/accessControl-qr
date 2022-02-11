@@ -1,5 +1,7 @@
 import { Guest } from 'interfaces/Guest'
 import { useRouter } from 'next/router'
+import { useSession, getSession } from 'next-auth/react'
+import Link from 'next/link'
 
 interface Props {
   guest: Guest | null
@@ -7,6 +9,7 @@ interface Props {
 }
 
 export default function GuestCard(props: Props) {
+  const { data: session } = useSession()
   const { guest, error } = props
   const router = useRouter()
 
@@ -25,6 +28,7 @@ export default function GuestCard(props: Props) {
     router.replace('/')
   }
 
+  if (session) {
   return (
     <div className="container mx-auto flex items-center flex-col p-4">
       {guest ? (
@@ -86,16 +90,34 @@ export default function GuestCard(props: Props) {
       </button>
     </div>
   )
+  } else {
+    return (
+      <div className="container flex flex-col items-center mx-auto">
+        <div
+          className="p-4 my-4 text-sm text-red-700 bg-red-100 rounded-lg dark:bg-red-200 dark:text-red-800"
+          role="alert"
+        >
+          No autorizado
+        </div>
+        <Link href="/api/auth/signin" passHref>
+          <button className="p-4 bg-blue-600 hover:bg-blue-700 focus:ring-blue-500 focus:ring-offset-blue-200 text-white transition ease-in duration-200 text-center text-base font-semibold shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2 rounded-full">
+            Iniciar sesión
+          </button>
+        </Link>
+      </div>
+    )
+  }
 }
 
-export const getServerSideProps = async ({ query }: { query: any }) => {
-  const { dni } = query
+export const getServerSideProps = async (context: any) => {
+  const { dni } = context.query
   const res = await fetch(`http://localhost:3000/api/guests/${dni}`)
   const data = await res.json()
 
   if (res.status < 300) {
     return {
       props: {
+        session: await getSession(context),
         guest: data,
         error: null,
       },
@@ -104,6 +126,7 @@ export const getServerSideProps = async ({ query }: { query: any }) => {
 
   return {
     props: {
+      session: await getSession(context),
       guest: null,
       error: data.error,
     },

@@ -1,4 +1,5 @@
 import { NextApiRequest, NextApiResponse } from 'next'
+import { getSession } from 'next-auth/react'
 import { Guest } from 'interfaces/Guest'
 import * as fs from 'fs'
 
@@ -28,13 +29,19 @@ const updateGuest = (dni: string | string[]) => {
   return guests[guestIndex]
 }
 
-export default function index(req: NextApiRequest, res: NextApiResponse) {
+export default async function index(req: NextApiRequest, res: NextApiResponse) {
   const {
     method,
     query: { dni },
   } = req
 
   try {
+    const session = await getSession({ req })
+
+    if (!session) {
+      return res.status(401).json({ error: 'Unauthorized' })
+    }
+
     if (method !== 'GET' && method !== 'PUT') {
       throw new Error('Method not allowed')
     }

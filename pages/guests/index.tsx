@@ -1,9 +1,12 @@
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { SearchIcon } from '@heroicons/react/solid'
+import { useSession } from 'next-auth/react'
 import { Guest } from 'interfaces/Guest'
 
 export default function Guests() {
+  const { data: session } = useSession()
+
   const [guests, setGuests] = useState([])
   const [searchInput, setSearchInput] = useState('')
   const [loading, setLoading] = useState(true)
@@ -22,6 +25,7 @@ export default function Guests() {
     }
   }, [searchInput])
 
+  if (session) {
   return (
     <div className="container mx-auto flex items-center flex-col p-4">
       <div className="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
@@ -113,4 +117,21 @@ export default function Guests() {
       </div>
     </div>
   )
+  } else {
+    return (
+      <div className="container flex flex-col items-center mx-auto">
+        <div
+          className="p-4 my-4 text-sm text-red-700 bg-red-100 rounded-lg dark:bg-red-200 dark:text-red-800"
+          role="alert"
+        >
+          No autorizado
+        </div>
+        <Link href="/api/auth/signin" passHref>
+          <button className="p-4 bg-blue-600 hover:bg-blue-700 focus:ring-blue-500 focus:ring-offset-blue-200 text-white transition ease-in duration-200 text-center text-base font-semibold shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2 rounded-full">
+            Iniciar sesión
+          </button>
+        </Link>
+      </div>
+    )
+  }
 }
