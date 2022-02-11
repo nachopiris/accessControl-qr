@@ -1,7 +1,7 @@
 import dynamic from 'next/dynamic'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
-import { useSession, signOut } from 'next-auth/react'
+import { useSession } from 'next-auth/react'
 import { useEffect, useState } from 'react'
 
 const QrReader = dynamic(() => import('react-qr-reader'), {
@@ -9,7 +9,7 @@ const QrReader = dynamic(() => import('react-qr-reader'), {
 })
 
 export default function Scanner() {
-  const { data: session } = useSession()
+  const { data: session, status } = useSession()
   const router = useRouter()
 
   const [dni, setDni] = useState('')
@@ -67,7 +67,7 @@ export default function Scanner() {
         )}
       </div>
     )
-  } else {
+  } else if (status !== 'loading') {
     return (
       <div className="container flex flex-col items-center mx-auto">
         <div
@@ -81,6 +81,17 @@ export default function Scanner() {
             Iniciar sesión
           </button>
         </Link>
+      </div>
+    )
+  } else {
+    return (
+      <div className="flex flex-col items-center justify-center h-screen">
+        <svg
+          className="animate-spin h-4 w-4 rounded-full bg-transparent border-2 border-transparent border-opacity-50 inline mr-2"
+          style={{ borderRightColor: 'black', borderTopColor: 'black' }}
+          viewBox="0 0 24 24"
+        ></svg>
+        <p className="font-sans font-medium text-lg inline">Cargando</p>
       </div>
     )
   }
