@@ -1,6 +1,6 @@
 const reader = require("xlsx");
 const path = require("path");
-const { capitalize } = require("../lib/capitalize");
+const capitalize = require("../lib/capitalize");
 
 const file = reader.readFile(path.join(__dirname, "../data/rrpps.xlsx"));
 
