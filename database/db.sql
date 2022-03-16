@@ -1,0 +1,32 @@
+CREATE DATABASE access_control;
+
+use access_control;
+
+CREATE TABLE admin (
+    id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    username VARCHAR(255) UNIQUE NOT NULL,
+    password VARCHAR(255) NOT NULL,
+    createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE rrpp (
+    id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    fullName VARCHAR(255) NOT NULL,
+    dni INT NOT NULL UNIQUE,
+    phoneNumber BIGINT NOT NULL,
+    spots INT NOT NULL DEFAULT 4,
+    sector INT NOT NULL DEFAULT 1,
+    createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE guest (
+    id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    rrpp_id INT NOT NULL,
+    fullName VARCHAR(255) NOT NULL,
+    dni INT NOT NULL UNIQUE,
+    phoneNumber BIGINT NOT NULL,
+    gotIn BOOLEAN DEFAULT false,
+    createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT `fk_guest_rrpp`
+      FOREIGN KEY (rrpp_id) REFERENCES rrpp (id)
+);

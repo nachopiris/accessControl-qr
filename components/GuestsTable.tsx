@@ -1,7 +1,12 @@
 import Link from "next/link";
-import { Guest } from "interfaces/Guest";
 import Loading from "./Loading";
 import SearchBar from "./SearchBar";
+
+interface Guest {
+  fullName: string;
+  dni: number;
+  gotIn: boolean;
+}
 
 interface Props {
   guests: Guest[];
@@ -46,8 +51,8 @@ export default function GuestsTable({
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div className="flex items-center">
                         <div className="text-sm font-medium text-gray-900">
-                          <Link href={`/guests/${guest.guestDNI}`}>
-                            {guest.guestName}
+                          <Link href={`/guests/${guest.dni}`}>
+                            {guest.fullName}
                           </Link>
                         </div>
                       </div>

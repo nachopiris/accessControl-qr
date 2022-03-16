@@ -1,6 +1,6 @@
 import { useRouter } from "next/router";
 import Button from "./Button";
-import Error from "./Error";
+import Alert from "./Alert";
 
 export default function Unauthorized() {
   const router = useRouter();
@@ -11,7 +11,7 @@ export default function Unauthorized() {
 
   return (
     <div className="container flex flex-col items-center mx-auto">
-      <Error message="No autorizado" />
+      <Alert type="error" message="No autorizado" />
       <Button text="Iniciar Sesión" onClick={login} />
     </div>
   );

@@ -1,0 +1,39 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model admin {
+  id        Int      @id @default(autoincrement())
+  username  String   @unique(map: "username") @db.VarChar(255)
+  password  String   @db.VarChar(255)
+  createdAt DateTime @default(now()) @db.Timestamp(0)
+}
+
+model guest {
+  id          Int      @id @default(autoincrement())
+  rrpp_id     Int
+  fullName    String   @db.VarChar(255)
+  dni         Int      @unique(map: "dni")
+  phoneNumber BigInt
+  gotIn       Boolean? @default(false)
+  createdAt   DateTime @default(now()) @db.Timestamp(0)
+  rrpp        rrpp     @relation(fields: [rrpp_id], references: [id], onUpdate: Restrict, map: "fk_guest_rrpp")
+
+  @@index([rrpp_id], map: "fk_guest_rrpp")
+}
+
+model rrpp {
+  id          Int      @id @default(autoincrement())
+  fullName    String   @db.VarChar(255)
+  dni         Int      @unique(map: "dni")
+  phoneNumber BigInt
+  spots       Int      @default(4)
+  sector      Int      @default(1)
+  createdAt   DateTime @default(now()) @db.Timestamp(0)
+  guest       guest[]
+}

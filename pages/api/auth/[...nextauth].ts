@@ -1,20 +1,10 @@
 import NextAuth from "next-auth";
 import CredentialProvider from "next-auth/providers/credentials";
-import * as fs from "fs";
-import { User } from "interfaces/User";
+import { PrismaClient } from "@prisma/client";
 
-const getData = () => {
-  const data = fs.readFileSync("data/accounts.json");
-  return JSON.parse(data.toString());
-};
+const prisma = new PrismaClient();
 
-const getUser = (username: string | undefined) => {
-  if (username) {
-    const users = getData();
-    return users.find((user: User) => user.username === username);
-  }
-  return null;
-};
+const { NEXTAUTH_SECRET } = process.env;
 
 export default NextAuth({
   providers: [
@@ -26,15 +16,25 @@ export default NextAuth({
           type: "text",
           placeholder: "Usuario",
         },
-        password: { label: "Contraseña", type: "password" },
+        password: {
+          label: "Contraseña",
+          type: "password",
+          placeholder: "Contraseña",
+        },
       },
-      authorize: (credentials) => {
-        const user = getUser(credentials?.username);
+      authorize: async (credentials) => {
+        const admin = await prisma.admin.findFirst({
+          where: {
+            username: credentials?.username,
+          },
+        });
 
-        if (user && user.password === credentials?.password) {
+        await prisma.$disconnect();
+
+        if (admin && admin.password === credentials?.password) {
           return {
-            username: user.username,
-            id: user.id,
+            username: admin.username,
+            id: admin.id,
           };
         }
 
@@ -44,7 +44,6 @@ export default NextAuth({
   ],
   callbacks: {
     jwt: ({ token, user }) => {
-      // first time jwt callback is run, user object is available
       if (user) {
         token.id = user.id;
         token.user = user.username;
@@ -60,8 +59,8 @@ export default NextAuth({
       return session;
     },
   },
-  secret: "bodydesaliba",
+  secret: NEXTAUTH_SECRET,
   jwt: {
-    secret: "bodydesaliba",
+    secret: NEXTAUTH_SECRET,
   },
 });

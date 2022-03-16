@@ -12,7 +12,7 @@ export default function index(req: NextApiRequest, res: NextApiResponse) {
       throw new Error("Method not allowed");
     }
 
-    if (dni.length !== 8 || isNaN(Number(dni))) {
+    if (dni?.length !== 8 || isNaN(Number(dni))) {
       throw new Error("DNI invalido");
     }
 

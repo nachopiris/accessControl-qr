@@ -5,16 +5,21 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "rrpps": "node ./scripts/addRrpps.js"
   },
   "dependencies": {
     "@heroicons/react": "^1.0.5",
+    "@prisma/client": "3.10.0",
+    "mysql2": "^2.3.3",
     "next": "12.0.9",
     "next-auth": "^4.2.1",
+    "prisma": "^3.10.0",
     "qr-image": "^3.2.0",
     "react": "17.0.2",
     "react-dom": "17.0.2",
-    "react-qr-reader": "^2.2.1"
+    "react-qr-reader": "^2.2.1",
+    "xlsx": "^0.18.3"
   },
   "devDependencies": {
     "@types/node": "17.0.12",

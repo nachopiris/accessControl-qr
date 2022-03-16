@@ -1,35 +1,13 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { getSession } from "next-auth/react";
-import { Guest } from "interfaces/Guest";
-import * as fs from "fs";
+import { PrismaClient } from "@prisma/client";
 
-const getData = () => {
-  const data = fs.readFileSync("data/list.json");
-  return JSON.parse(data.toString());
-};
+const prisma = new PrismaClient();
 
-const writeData = (data: string) => {
-  fs.writeFile("data/list.json", JSON.stringify(data), function (err) {
-    if (err) throw err;
-  });
-};
-
-const getGuest = (dni: string | string[]) => {
-  const guests = getData();
-  return guests.find((guest: Guest) => guest.guestDNI === Number(dni));
-};
-
-const updateGuest = (dni: string | string[]) => {
-  const guests = getData();
-  const guestIndex = guests.findIndex(
-    (guest: Guest) => guest.guestDNI === Number(dni)
-  );
-  guests[guestIndex].gotIn = true;
-  writeData(guests);
-  return guests[guestIndex];
-};
-
-export default async function index(req: NextApiRequest, res: NextApiResponse) {
+export default async function handler(
+  req: NextApiRequest,
+  res: NextApiResponse
+) {
   const {
     method,
     query: { dni },
@@ -42,26 +20,50 @@ export default async function index(req: NextApiRequest, res: NextApiResponse) {
       return res.status(401).json({ error: "Unauthorized" });
     }
 
-    if (method !== "GET" && method !== "PUT") {
-      throw new Error("Method not allowed");
-    }
-
-    if (dni.length !== 8 || isNaN(Number(dni))) {
+    if (dni?.length !== 8 || isNaN(Number(dni))) {
       throw new Error("DNI inválido");
     }
 
-    const guest = getGuest(dni);
+    if (method === "GET" || method === "PUT") {
+      const guest = await prisma.guest.findUnique({
+        where: {
+          dni: Number(dni),
+        },
+        select: {
+          fullName: true,
+          dni: true,
+          gotIn: true,
+          rrpp: {
+            select: {
+              fullName: true,
+            },
+          },
+        },
+      });
+      if (!guest) {
+        throw new Error("No está en lista");
+      }
 
-    if (!guest) {
-      throw new Error("No está en lista");
+      if (method === "PUT") {
+        if (guest.gotIn) {
+          throw new Error("El invitado ya ingresó");
+        }
+        await prisma.guest.update({
+          where: {
+            dni: Number(dni),
+          },
+          data: {
+            gotIn: true,
+          },
+        });
+        await prisma.$disconnect();
+        return res.status(200).json({ message: "Ingreso marcado con éxito" });
+      }
+      await prisma.$disconnect();
+      return res.status(200).json(guest);
     }
 
-    if (method === "GET") {
-      res.json(guest);
-    } else {
-      const updatedGuest = updateGuest(dni);
-      res.json(updatedGuest);
-    }
+    throw new Error("Method not allowed");
   } catch (error: any) {
     res.status(400).json({ error: error.message });
   }

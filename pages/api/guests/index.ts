@@ -1,45 +1,92 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { getSession } from "next-auth/react";
-import { Guest } from "interfaces/Guest";
-import * as fs from "fs";
+import { PrismaClient } from "@prisma/client";
+import capitalize from "lib/capitalize";
+import formatPhoneNumber from "lib/formatPhoneNumber";
 
-const getData = () => {
-  const data = fs.readFileSync("data/list.json");
-  return JSON.parse(data.toString());
-};
+const prisma = new PrismaClient();
 
-const getGuests = () => {
-  return getData();
-};
+interface Body {
+  firstName: string;
+  lastName: string;
+  dni: string;
+  phoneNumber: string;
+}
 
-export default async function index(req: NextApiRequest, res: NextApiResponse) {
+export default async function handler(
+  req: NextApiRequest,
+  res: NextApiResponse
+) {
   const {
     method,
     query: { name },
+    body,
   } = req;
 
   try {
-    const session = await getSession({ req });
+    if (method === "GET") {
+      const session = await getSession({ req });
 
-    if (!session) {
-      return res.status(401).json({ error: "Unauthorized" });
+      if (!session) {
+        return res.status(401).json({ error: "Unauthorized" });
+      }
+
+      const guests = await prisma.guest.findMany({
+        where: {
+          fullName: {
+            contains: name,
+          },
+        },
+        select: {
+          fullName: true,
+          gotIn: true,
+          dni: true,
+        },
+      });
+      await prisma.$disconnect();
+
+      return res.json(guests);
     }
 
-    if (method !== "GET") {
-      throw new Error("Method not allowed");
+    if (method === "POST") {
+      const { guests, rrppDni } = JSON.parse(body);
+      const rrpp = await prisma.rrpp.findUnique({
+        where: {
+          dni: Number(rrppDni),
+        },
+        include: {
+          guest: true,
+        },
+      });
+      if (!rrpp) {
+        throw new Error("RRPP no registrado");
+      }
+      if (rrpp.guest.length + guests.length > rrpp.spots) {
+        throw new Error("No tiene lugares disponibles");
+      }
+      const finalGuests = guests.map((guest: Body) => {
+        return {
+          fullName: `${capitalize(guest.firstName)} ${capitalize(
+            guest.lastName
+          )}`,
+          dni: Number(guest.dni),
+          phoneNumber: Number(formatPhoneNumber(guest.phoneNumber)),
+          rrpp_id: rrpp.id,
+        };
+      });
+      await prisma.guest.createMany({
+        data: finalGuests,
+        skipDuplicates: true,
+      });
+      await prisma.$disconnect();
+      return res.json({
+        message: `Invitados agregados con éxito, te quedan ${
+          rrpp.spots - (rrpp.guest.length + guests.length)
+        } lugares`,
+      });
     }
 
-    const guests = getGuests();
-
-    if (name) {
-      return res.json(
-        guests.filter((guest: Guest) =>
-          guest.guestName.toLowerCase().includes(name)
-        )
-      );
-    }
-
-    res.json(guests);
+    throw new Error("Method not allowed");
   } catch (error: any) {
     res.status(400).json({ error: error.message });
   }

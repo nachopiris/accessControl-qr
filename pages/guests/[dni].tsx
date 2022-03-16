@@ -3,7 +3,7 @@ import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 import Loading from "components/Loading";
 import GuestCard from "components/GuestCard";
-import Error from "components/Error";
+import Alert from "components/Alert";
 import Button from "components/Button";
 import Unauthorized from "components/Unauthorized";
 
@@ -14,7 +14,7 @@ export default function Guest() {
 
   const [guest, setGuest] = useState(null as any);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [error, setError] = useState("");
 
   const getGuest = async () => {
     setLoading(true);
@@ -35,7 +35,7 @@ export default function Guest() {
   }, [dni]);
 
   const gotIn = async () => {
-    await fetch(`/api/guests/${guest?.guestDNI}`, {
+    await fetch(`/api/guests/${guest?.dni}`, {
       method: "PUT",
     });
     getGuest();
@@ -50,13 +50,15 @@ export default function Guest() {
       <div className="container mx-auto flex items-center flex-col p-4">
         {guest ? (
           <GuestCard
-            rrppName={guest.rrppName}
-            guestName={guest.guestName}
-            guestDNI={guest.guestDNI}
+            rrppFullName={guest.rrpp.fullName}
+            fullName={guest.fullName}
+            dni={guest.dni}
             gotIn={guest.gotIn}
           />
         ) : (
-          <div>{loading ? <Loading /> : <Error message={error} />}</div>
+          <div>
+            {loading ? <Loading /> : <Alert type="error" message={error} />}
+          </div>
         )}
 
         {!loading && (
