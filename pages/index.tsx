@@ -52,7 +52,12 @@ export default function Scanner() {
             style={{ width: "100%" }}
           />
 
-          <Button text="Ver lista" onClick={guestsTable} />
+          <Button
+            text="Ver lista"
+            onClick={guestsTable}
+            disabled={false}
+            loading={false}
+          />
         </>
       ) : (
         <Loading />

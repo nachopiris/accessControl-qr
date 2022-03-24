@@ -2,6 +2,7 @@ import Alert from "components/Alert";
 import { useState } from "react";
 import { XIcon } from "@heroicons/react/solid";
 import capitalize from "lib/capitalize";
+import Button from "components/Button";
 
 interface Guest {
   firstName: string;
@@ -19,6 +20,7 @@ export default function NewGuest() {
   const [guests, setGuests] = useState<Guest[]>([]);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const addGuest = () => {
     const guest = {
@@ -34,8 +36,8 @@ export default function NewGuest() {
     setPhoneNumber("");
   };
 
-  const sendForm = async (e: any) => {
-    e.preventDefault();
+  const sendForm = async () => {
+    setLoading(true);
     setGuests([...[]]);
     setError("");
     setSuccess("");
@@ -52,6 +54,7 @@ export default function NewGuest() {
     } else {
       setSuccess(data.message);
     }
+    setLoading(false);
   };
 
   const removeGuest = (dni: string) => {
@@ -66,7 +69,7 @@ export default function NewGuest() {
       {error && <Alert type="error" message={error} />}
       {success && <Alert type="success" message={success} />}
       <div className="bg-white max-w-2xl shadow overflow-hidden sm:rounded-lg mb-4 w-full p-4 mt-3">
-        <form onSubmit={sendForm}>
+        <form>
           <div className="mb-6">
             <label
               htmlFor="firstName"
@@ -153,18 +156,12 @@ export default function NewGuest() {
               })}
             </div>
           )}
-          <button
-            type="button"
+          <Button
             onClick={addGuest}
             disabled={!firstName || !lastName || !dni || !phoneNumber}
-            className={`text-white mb-6 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center ${
-              !firstName || !lastName || !dni || !phoneNumber
-                ? "bg-blue-400"
-                : "bg-blue-700 hover:bg-blue-800"
-            }`}
-          >
-            Agregar
-          </button>
+            text="Agregar"
+            loading={false}
+          />
           <div className="mb-6">
             <label
               htmlFor="rrppDni"
@@ -182,17 +179,12 @@ export default function NewGuest() {
               required
             />
           </div>
-          <button
-            type="submit"
+          <Button
+            onClick={sendForm}
             disabled={guests.length === 0 || !rrppDni}
-            className={`text-white mb-6 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center ${
-              guests.length === 0
-                ? "bg-blue-400"
-                : "bg-blue-700 hover:bg-blue-800"
-            }`}
-          >
-            Enviar formulario
-          </button>
+            text="Enviar formulario"
+            loading={loading}
+          />
         </form>
       </div>
     </div>

@@ -12,7 +12,12 @@ export default function Unauthorized() {
   return (
     <div className="container flex flex-col items-center mx-auto">
       <Alert type="error" message="No autorizado" />
-      <Button text="Iniciar Sesión" onClick={login} />
+      <Button
+        text="Iniciar Sesión"
+        onClick={login}
+        disabled={false}
+        loading={false}
+      />
     </div>
   );
 }

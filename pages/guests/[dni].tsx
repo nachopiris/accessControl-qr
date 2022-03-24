@@ -67,6 +67,8 @@ export default function Guest() {
               error || guest?.gotIn ? "Volver al scanner" : "Marcar ingreso"
             }
             onClick={error || guest?.gotIn ? backToScanner : gotIn}
+            loading={loading}
+            disabled={false}
           />
         )}
       </div>
