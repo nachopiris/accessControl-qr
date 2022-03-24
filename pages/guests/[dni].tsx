@@ -64,7 +64,7 @@ export default function Guest() {
           </div>
         )}
 
-        {!loading && guest && (
+        {guest && (
           <Button
             text={
               error || guest?.gotIn ? "Volver al scanner" : "Marcar ingreso"
