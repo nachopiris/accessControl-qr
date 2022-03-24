@@ -41,7 +41,7 @@ export default async function handler(req: any, res: any) {
       });
       await prisma.$disconnect();
 
-      return res.json(guests);
+      return res.status(200).json(guests);
     }
 
     if (method === "POST") {
@@ -75,7 +75,7 @@ export default async function handler(req: any, res: any) {
         skipDuplicates: true,
       });
       await prisma.$disconnect();
-      return res.json({
+      return res.status(201).json({
         message: `Invitados agregados con éxito, te quedan ${
           rrpp.spots - (rrpp.guest.length + guests.length)
         } lugares`,

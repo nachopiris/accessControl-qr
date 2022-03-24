@@ -53,7 +53,7 @@ export default async function handler(req: any, res: any) {
           },
         });
         await prisma.$disconnect();
-        return res.status(200).json({ message: "Ingreso marcado con éxito" });
+        return res.status(201).json({ message: "Ingreso marcado con éxito" });
       }
       await prisma.$disconnect();
       return res.status(200).json(guest);
