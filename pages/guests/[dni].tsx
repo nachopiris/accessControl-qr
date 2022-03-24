@@ -15,6 +15,7 @@ export default function Guest() {
   const [guest, setGuest] = useState(null as any);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [updatingGuest, setUpdatingGuest] = useState(false);
 
   const getGuest = async () => {
     setLoading(true);
@@ -35,9 +36,11 @@ export default function Guest() {
   }, [dni]);
 
   const gotIn = async () => {
+    setUpdatingGuest(true);
     await fetch(`/api/guests/${guest?.dni}`, {
       method: "PUT",
     });
+    setUpdatingGuest(false);
     getGuest();
   };
 
@@ -67,8 +70,8 @@ export default function Guest() {
               error || guest?.gotIn ? "Volver al scanner" : "Marcar ingreso"
             }
             onClick={error || guest?.gotIn ? backToScanner : gotIn}
-            loading={loading}
-            disabled={false}
+            loading={updatingGuest}
+            disabled={updatingGuest}
           />
         )}
       </div>

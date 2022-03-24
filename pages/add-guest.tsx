@@ -181,7 +181,7 @@ export default function NewGuest() {
           </div>
           <Button
             onClick={sendForm}
-            disabled={guests.length === 0 || !rrppDni}
+            disabled={guests.length === 0 || !rrppDni || loading}
             text="Enviar formulario"
             loading={loading}
           />
