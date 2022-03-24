@@ -67,11 +67,13 @@ export default function Guest() {
         {guest && (
           <Button
             text={
-              error || guest?.gotIn ? "Volver al scanner" : "Marcar ingreso"
+              error || guest?.gotIn || loading
+                ? "Volver al scanner"
+                : "Marcar ingreso"
             }
-            onClick={error || guest?.gotIn ? backToScanner : gotIn}
+            onClick={error || guest?.gotIn || loading ? backToScanner : gotIn}
             loading={updatingGuest}
-            disabled={updatingGuest}
+            disabled={updatingGuest || loading}
           />
         )}
       </div>
