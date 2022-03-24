@@ -73,7 +73,7 @@ export default function Guest() {
             }
             onClick={error || guest?.gotIn || loading ? backToScanner : gotIn}
             loading={updatingGuest}
-            disabled={updatingGuest || loading}
+            disabled={updatingGuest}
           />
         )}
       </div>
