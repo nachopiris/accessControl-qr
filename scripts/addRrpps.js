@@ -14,7 +14,7 @@ const main = async () => {
         }
       })
       if (!rrpp) {
-        await prisma.rrpp.create({
+        rrpp = await prisma.rrpp.create({
           data: {
             fullName,
             dni,
