@@ -8,13 +8,19 @@ const main = async () => {
     const rrpps = getRrpps();
     for (let i = 0; i < rrpps.length; i++) {
       const { fullName, dni, phoneNumber } = rrpps[i];
-      const rrpp = await prisma.rrpp.create({
-        data: {
-          fullName,
-          dni,
-          phoneNumber,
-        },
-      });
+      let rrpp = await prisma.rrpp.findUnique({
+        where: dni
+      })
+      if (!rrpp) {
+        rrpp = await prisma.rrpp.create({
+          data: {
+            fullName,
+            dni,
+            phoneNumber,
+          },
+          skipDuplicated: true
+        });
+      }
       await prisma.guest.create({
         data: {
           rrpp_id: rrpp.id,
