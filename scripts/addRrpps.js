@@ -21,15 +21,16 @@ const main = async () => {
             phoneNumber,
           },
         });
-        await prisma.guest.create({
-          data: {
-            rrpp_id: rrpp.id,
-            fullName,
-            dni,
-            phoneNumber,
-          },
-        });
       }
+      await prisma.guest.create({
+        data: {
+          rrpp_id: rrpp.id,
+          fullName,
+          dni,
+          phoneNumber,
+        },
+        skipDuplicated: true
+      });
     }
     await prisma.$disconnect();
     console.log("Success!");
