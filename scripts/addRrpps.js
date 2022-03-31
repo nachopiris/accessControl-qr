@@ -29,7 +29,7 @@ const main = async () => {
           dni,
           phoneNumber,
         },
-        skipDuplicated: true
+        skipDuplicates: true
       });
     }
     await prisma.$disconnect();
