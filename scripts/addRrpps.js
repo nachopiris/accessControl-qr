@@ -14,23 +14,22 @@ const main = async () => {
         }
       })
       if (!rrpp) {
-        rrpp = await prisma.rrpp.create({
+        await prisma.rrpp.create({
           data: {
             fullName,
             dni,
             phoneNumber,
           },
         });
+        await prisma.guest.create({
+          data: {
+            rrpp_id: rrpp.id,
+            fullName,
+            dni,
+            phoneNumber,
+          },
+        });
       }
-      console.log(dni)
-      await prisma.guest.create({
-        data: {
-          rrpp_id: rrpp.id,
-          fullName,
-          dni,
-          phoneNumber,
-        },
-      });
     }
     await prisma.$disconnect();
     console.log("Success!");
