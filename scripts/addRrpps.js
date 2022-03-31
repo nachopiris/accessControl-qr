@@ -9,7 +9,9 @@ const main = async () => {
     for (let i = 0; i < rrpps.length; i++) {
       const { fullName, dni, phoneNumber } = rrpps[i];
       let rrpp = await prisma.rrpp.findUnique({
-        where: dni
+        where: {
+          dni
+        }
       })
       if (!rrpp) {
         rrpp = await prisma.rrpp.create({
