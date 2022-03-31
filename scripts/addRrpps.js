@@ -20,9 +20,9 @@ const main = async () => {
             dni,
             phoneNumber,
           },
-          skipDuplicated: true
         });
       }
+      console.log(dni)
       await prisma.guest.create({
         data: {
           rrpp_id: rrpp.id,
