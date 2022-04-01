@@ -7,7 +7,7 @@ const prisma = new PrismaClient();
 const { WHATSAPP_API_BASE_URI } = process.env;
 
 const message =
-  "Ready para el vip??🤘🤘\n\nLos esperamos esta noche, recuerden que el horario de ingreso por lista es hasta las 2:30 AM.";
+  "Hola! Listo para pasarla de lujo este sábado en Alta Vista? 🤪 de la mano de la #SiATodo ( no podes decir que no, ya tenes tu pase free 🥳)";
 
 const sleep = (ms) => {
   return new Promise((resolve) => setTimeout(resolve, ms));
@@ -45,7 +45,7 @@ const main = async () => {
     const res = await sendMessage(guests[i]);
     console.log(res.data);
     if (i !== guests.length - 1) {
-      await sleep(3000);
+      await sleep(5000);
     }
   }
 };

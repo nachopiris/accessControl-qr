@@ -5,11 +5,11 @@ const capitalize = require("../lib/capitalize");
 const file = reader.readFile(path.join(__dirname, "../data/rrpps.xlsx"));
 
 class Rrpp {
-  constructor(fullName, dni, phoneNumber, sector) {
+  constructor(fullName, dni, phoneNumber, spots) {
     (this.fullName = this.formatNames(fullName)),
       (this.dni = this.formatDNI(dni)),
       (this.phoneNumber = this.formatPhoneNumber(phoneNumber)),
-      (this.sector = sector);
+      (this.spots = Number(spots));
   }
 
   formatNames(name) {
