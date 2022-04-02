@@ -3,7 +3,7 @@ interface Props {
   fullName: string;
   dni: number;
   gotIn: boolean;
-  sector: number
+  sector: number;
 }
 
 export default function GuestCard({
@@ -11,7 +11,7 @@ export default function GuestCard({
   fullName,
   dni,
   gotIn,
-  sector
+  sector,
 }: Props) {
   return (
     <div className="bg-white max-w-2xl shadow overflow-hidden sm:rounded-lg mb-4 w-full">
@@ -38,11 +38,9 @@ export default function GuestCard({
             </dd>
           </div>
           <div className="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-            <dt className="text-sm font-medium text-gray-500">
-              Sector
-            </dt>
+            <dt className="text-sm font-medium text-gray-500">Sector</dt>
             <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-              {sector === 1 ? "🟢" : "⚫"}
+              {sector === 1 ? "🥶" : "🌚"}
             </dd>
           </div>
           <div className="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
@@ -59,6 +57,16 @@ export default function GuestCard({
               </span>
             </dd>
           </div>
+          {rrppFullName === fullName && (
+            <div className="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+              <dt className="text-sm font-medium text-gray-500">
+                <b>Es RRPP</b>
+              </dt>
+              <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                ⭐
+              </dd>
+            </div>
+          )}
         </dl>
       </div>
     </div>

@@ -1,5 +1,5 @@
 import { getSession } from "next-auth/react";
-import prisma from "../../../prisma/client"
+import prisma from "../../../prisma/client";
 
 export default async function handler(req: any, res: any) {
   const {
@@ -30,7 +30,7 @@ export default async function handler(req: any, res: any) {
           rrpp: {
             select: {
               fullName: true,
-              sector: true
+              sector: true,
             },
           },
         },

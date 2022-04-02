@@ -1,7 +1,7 @@
 import { getSession } from "next-auth/react";
 import capitalize from "lib/capitalize";
 import formatPhoneNumber from "lib/formatPhoneNumber";
-import prisma from "../../../prisma/client"
+import prisma from "../../../prisma/client";
 
 interface Body {
   firstName: string;

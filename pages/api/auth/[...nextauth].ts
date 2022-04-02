@@ -1,6 +1,6 @@
 import NextAuth from "next-auth";
 import CredentialProvider from "next-auth/providers/credentials";
-import prisma from "../../../prisma/client"
+import prisma from "../../../prisma/client";
 
 const { NEXTAUTH_SECRET } = process.env;
 
