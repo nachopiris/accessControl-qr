@@ -1,7 +1,5 @@
-const { PrismaClient } = require("@prisma/client");
-const getRrpps = require("./getRrpps");
-
-const prisma = new PrismaClient();
+import getRrpps from "./getRrpps"
+import prisma from "../prisma/client"
 
 const main = async () => {
   try {
@@ -48,7 +46,6 @@ const main = async () => {
         });
       }
     }
-    await prisma.$disconnect();
     console.log("Success!");
   } catch (error) {
     console.log(error.message);

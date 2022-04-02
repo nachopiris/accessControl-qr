@@ -57,6 +57,7 @@ export default function Guest() {
             fullName={guest.fullName}
             dni={guest.dni}
             gotIn={guest.gotIn}
+            sector={guest.rrpp.sector}
           />
         ) : (
           <div>

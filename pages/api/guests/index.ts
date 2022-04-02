@@ -1,9 +1,7 @@
 import { getSession } from "next-auth/react";
-import { PrismaClient } from "@prisma/client";
 import capitalize from "lib/capitalize";
 import formatPhoneNumber from "lib/formatPhoneNumber";
-
-const prisma = new PrismaClient();
+import prisma from "../../../prisma/client"
 
 interface Body {
   firstName: string;
@@ -39,8 +37,6 @@ export default async function handler(req: any, res: any) {
           dni: true,
         },
       });
-      await prisma.$disconnect();
-
       return res.status(200).json(guests);
     }
 
@@ -74,7 +70,6 @@ export default async function handler(req: any, res: any) {
         data: finalGuests,
         skipDuplicates: true,
       });
-      await prisma.$disconnect();
       return res.status(201).json({
         message: `Invitados agregados con éxito, te quedan ${
           rrpp.spots - (rrpp.guest.length + guests.length)

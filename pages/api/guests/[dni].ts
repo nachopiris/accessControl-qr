@@ -1,7 +1,5 @@
 import { getSession } from "next-auth/react";
-import { PrismaClient } from "@prisma/client";
-
-const prisma = new PrismaClient();
+import prisma from "../../../prisma/client"
 
 export default async function handler(req: any, res: any) {
   const {
@@ -32,6 +30,7 @@ export default async function handler(req: any, res: any) {
           rrpp: {
             select: {
               fullName: true,
+              sector: true
             },
           },
         },
@@ -52,10 +51,8 @@ export default async function handler(req: any, res: any) {
             gotIn: true,
           },
         });
-        await prisma.$disconnect();
         return res.status(201).json({ message: "Ingreso marcado con éxito" });
       }
-      await prisma.$disconnect();
       return res.status(200).json(guest);
     }
 

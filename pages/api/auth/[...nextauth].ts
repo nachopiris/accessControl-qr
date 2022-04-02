@@ -1,8 +1,6 @@
 import NextAuth from "next-auth";
 import CredentialProvider from "next-auth/providers/credentials";
-import { PrismaClient } from "@prisma/client";
-
-const prisma = new PrismaClient();
+import prisma from "../../../prisma/client"
 
 const { NEXTAUTH_SECRET } = process.env;
 
@@ -28,8 +26,6 @@ export default NextAuth({
             username: credentials?.username,
           },
         });
-
-        await prisma.$disconnect();
 
         if (admin && admin.password === credentials?.password) {
           return {
