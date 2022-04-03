@@ -29,7 +29,7 @@ export default async function handler(req: any, res: any) {
           gotIn: true,
           rrpp: {
             select: {
-              fullName: true,
+              dni: true,
               sector: true,
             },
           },

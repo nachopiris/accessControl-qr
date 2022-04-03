@@ -53,7 +53,7 @@ export default function Guest() {
       <div className="container mx-auto flex items-center flex-col p-4">
         {guest ? (
           <GuestCard
-            rrppFullName={guest.rrpp.fullName}
+            rrppDni={guest.rrpp.dni}
             fullName={guest.fullName}
             dni={guest.dni}
             gotIn={guest.gotIn}
